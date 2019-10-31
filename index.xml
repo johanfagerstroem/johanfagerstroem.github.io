@@ -1,0 +1,45 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Johan Fagerström | Rants and pants on Johan Fagerström | Rants and pants</title>
+    <link>https://example.com/</link>
+    <description>Recent content in Johan Fagerström | Rants and pants on Johan Fagerström | Rants and pants</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
+    <lastBuildDate>Wed, 09 Apr 2014 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://example.com/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>About me</title>
+      <link>https://example.com/aboutme/</link>
+      <pubDate>Wed, 09 Apr 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://example.com/aboutme/</guid>
+      <description>&lt;p&gt;You have found my personal internetial residence. My name is Johan Fagerström
+and I&amp;rsquo;m a backend developer, clearly revealed by the fact that I will
+piggy-back on Fastbyte01&amp;rsquo;s Hugo theme.&lt;/p&gt;
+
+&lt;p&gt;Currently I work with IoT and Cloud at &lt;a href=&#34;https://axis.com&#34; rel=&#34;nofollow noreferrer&#34; target=&#34;_blank&#34;&gt;Axis Communications AB&lt;/a&gt;
+in Lund, Sweden. It&amp;rsquo;s a good company - if you wanna know more, send me an email
+and we&amp;rsquo;ll have a spontaneous chat! :)&lt;/p&gt;
+
+&lt;p&gt;In my spare time i tinker and muck around with all kinds of tech related to
+software, computer networks and stuff. As I do something that might
+be of help to others, I might write a post about it here.&lt;/p&gt;
+
+&lt;p&gt;Also, let&amp;rsquo;s get the elephant out of the room: &lt;strong&gt;anything on this site
+is copy-left as crazy&lt;/strong&gt;.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Posts</title>
+      <link></link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid></guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>
