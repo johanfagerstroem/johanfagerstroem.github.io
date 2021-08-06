@@ -6,7 +6,6 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Wed, 09 Apr 2014 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://johanfagerstroem.github.io/" rel="self" type="application/rss+xml" />
     
     <item>
@@ -15,30 +14,15 @@
       <pubDate>Wed, 09 Apr 2014 00:00:00 +0000</pubDate>
       
       <guid>https://johanfagerstroem.github.io/aboutme/</guid>
-      <description>&lt;p&gt;You have found my personal internetial residence. My name is Johan Fagerström
-and I&amp;rsquo;m a backend developer, clearly revealed by the fact that I will
-piggy-back on Fastbyte01&amp;rsquo;s Hugo theme.&lt;/p&gt;
-
-&lt;p&gt;Currently I work with IoT and Cloud at &lt;a href=&#34;https://axis.com&#34; rel=&#34;nofollow noreferrer&#34; target=&#34;_blank&#34;&gt;Axis Communications AB&lt;/a&gt;
-in Lund, Sweden. It&amp;rsquo;s a good company - if you wanna know more, send me an email
-and we&amp;rsquo;ll have a spontaneous chat! :)&lt;/p&gt;
-
-&lt;p&gt;In my spare time i tinker and muck around with all kinds of tech related to
-software, computer networks and stuff. As I do something that might
-be of help to others, I might write a post about it here.&lt;/p&gt;
-
-&lt;p&gt;Also, let&amp;rsquo;s get the elephant out of the room: &lt;strong&gt;anything on this site
-is copy-left as crazy&lt;/strong&gt;.&lt;/p&gt;
+      <description>&lt;p&gt;You have found my personal internetial residence.&lt;/p&gt;
+&lt;p&gt;Currently I work with physical security, IoT and cloud at
+&lt;a href=&#34;https://yoursix.com&#34;&gt;YourSix&lt;/a&gt;. You wanna work with us? Shoot me a message!&lt;/p&gt;
+&lt;p&gt;In my spare time I tinker and muck around with all kinds of tech related to
+software and computers. As I do something that might be of even the least
+interest for anyone else than myself, I might write a post about it here. As
+you can see though - this site isn&amp;rsquo;t really the center of gravity (just yet).&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Everything on this site is as copy-left as it possibly can become&lt;/strong&gt;.&lt;/p&gt;
 </description>
-    </item>
-    
-    <item>
-      <title>Posts</title>
-      <link></link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid></guid>
-      <description></description>
     </item>
     
   </channel>
