@@ -2,21 +2,9 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
     <url>
-      <loc>https://johanfagerstroem.github.io/aboutme/</loc>
-      
-      <lastmod>2014-04-09T00:00:00+00:00</lastmod>
-      
-      
-      <changefreq>monthly</changefreq>
-      
-      
-      <priority>0.5</priority>
-      
-      
-    </url>
-  
-    <url>
       <loc>https://johanfagerstroem.github.io/categories/</loc>
+      
+      <lastmod>2019-10-31T18:49:47+00:00</lastmod>
       
       
       <changefreq>monthly</changefreq>
@@ -29,6 +17,64 @@
   
     <url>
       <loc>https://johanfagerstroem.github.io/</loc>
+      
+      <lastmod>2019-10-31T18:49:47+00:00</lastmod>
+      
+      
+      <changefreq>monthly</changefreq>
+      
+      
+      <priority>0.5</priority>
+      
+      
+    </url>
+  
+    <url>
+      <loc>https://johanfagerstroem.github.io/posts/</loc>
+      
+      <lastmod>2019-10-31T18:49:47+00:00</lastmod>
+      
+      
+      <changefreq>monthly</changefreq>
+      
+      
+      <priority>0.5</priority>
+      
+      
+    </url>
+  
+    <url>
+      <loc>https://johanfagerstroem.github.io/categories/random/</loc>
+      
+      <lastmod>2019-10-31T18:49:47+00:00</lastmod>
+      
+      
+      <changefreq>monthly</changefreq>
+      
+      
+      <priority>0.5</priority>
+      
+      
+    </url>
+  
+    <url>
+      <loc>https://johanfagerstroem.github.io/2019/first-post/</loc>
+      
+      <lastmod>2019-10-31T18:49:47+00:00</lastmod>
+      
+      
+      <changefreq>monthly</changefreq>
+      
+      
+      <priority>0.5</priority>
+      
+      
+    </url>
+  
+    <url>
+      <loc>https://johanfagerstroem.github.io/aboutme/</loc>
+      
+      <lastmod>2014-04-09T00:00:00+00:00</lastmod>
       
       
       <changefreq>monthly</changefreq>

@@ -6,7 +6,17 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
+    <lastBuildDate>Thu, 31 Oct 2019 18:49:47 +0000</lastBuildDate>
     <atom:link href="https://johanfagerstroem.github.io/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Posts</title>
+      <link>https://johanfagerstroem.github.io/posts/</link>
+      <pubDate>Thu, 31 Oct 2019 18:49:47 +0000</pubDate>
+      
+      <guid>https://johanfagerstroem.github.io/posts/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>About me</title>

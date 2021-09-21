@@ -6,6 +6,16 @@
     <description>Recent content in Categories on Johan Fagerström | Tech and Recreation</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><atom:link href="https://johanfagerstroem.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
+    <lastBuildDate>Thu, 31 Oct 2019 18:49:47 +0000</lastBuildDate><atom:link href="https://johanfagerstroem.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Random</title>
+      <link>https://johanfagerstroem.github.io/categories/random/</link>
+      <pubDate>Thu, 31 Oct 2019 18:49:47 +0000</pubDate>
+      
+      <guid>https://johanfagerstroem.github.io/categories/random/</guid>
+      <description></description>
+    </item>
+    
   </channel>
 </rss>

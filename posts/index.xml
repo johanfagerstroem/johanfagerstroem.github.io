@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on Johan Fagerström | Tech and Recreation</title>
+    <link>https://johanfagerstroem.github.io/posts/</link>
+    <description>Recent content in Posts on Johan Fagerström | Tech and Recreation</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
+    <lastBuildDate>Thu, 31 Oct 2019 18:49:47 +0000</lastBuildDate><atom:link href="https://johanfagerstroem.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>That first post</title>
+      <link>https://johanfagerstroem.github.io/2019/first-post/</link>
+      <pubDate>Thu, 31 Oct 2019 18:49:47 +0000</pubDate>
+      
+      <guid>https://johanfagerstroem.github.io/2019/first-post/</guid>
+      <description>So, I got the idea that I should start writing down whatever I do that may be of any help to others. Every now and then, I find myself in the situation of a technical problem that just doesn&amp;rsquo;t seem to have a solution indexed in any search engine or community, and I&amp;rsquo;ll have to solve it on my own. That is on example of what I will write about here.</description>
+    </item>
+    
+  </channel>
+</rss>
