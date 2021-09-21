@@ -14,7 +14,7 @@
       <pubDate>Tue, 21 Sep 2021 10:49:47 +0000</pubDate>
       
       <guid>https://johanfagerstroem.github.io/2021/https-client-certificates-with-yubikeys/</guid>
-      <description>Introduction tl;dr This post covers setting up Caddy as reverse proxy, and configure it to perform client certificate validation (a.k.a. mTLS). In addition to this, the post covers storing the client certificate and the private key securely on a Yubikey (acting as a virtual PIV smart card).
+      <description>Introduction tl;dr This post covers setting up Caddy as a reverse proxy, and configure it to perform client certificate validation (a.k.a. mTLS). In addition to this, the post covers storing the client certificate and the private key securely on a Yubikey (acting as a virtual PIV smart card).
 I wasn&amp;rsquo;t able to find a similar quickstart tutorial on the internet, therefore I&amp;rsquo;m writing this one. I have absolutely zero affiliation with Yubico or Caddy; I just enjoy mucking about with their products and tools as they are really one step closer to ItJustWorks(TM) than several other solutions.</description>
     </item>
     

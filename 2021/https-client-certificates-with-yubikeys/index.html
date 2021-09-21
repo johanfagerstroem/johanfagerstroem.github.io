@@ -36,7 +36,7 @@
 
   <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="HTTPS client certificates using Yubikeys"/>
-<meta name="twitter:description" content="Introduction tl;dr This post covers setting up Caddy as reverse proxy, and configure it to perform client certificate validation (a.k.a. mTLS). In addition to this, the post covers storing the client certificate and the private key securely on a Yubikey (acting as a virtual PIV smart card).
+<meta name="twitter:description" content="Introduction tl;dr This post covers setting up Caddy as a reverse proxy, and configure it to perform client certificate validation (a.k.a. mTLS). In addition to this, the post covers storing the client certificate and the private key securely on a Yubikey (acting as a virtual PIV smart card).
 I wasn&rsquo;t able to find a similar quickstart tutorial on the internet, therefore I&rsquo;m writing this one. I have absolutely zero affiliation with Yubico or Caddy; I just enjoy mucking about with their products and tools as they are really one step closer to ItJustWorks(TM) than several other solutions."/>
 
   <script type="application/ld+json">
@@ -56,7 +56,7 @@ I wasn&rsquo;t able to find a similar quickstart tutorial on the internet, there
   },
   "genre": "posts",
   
-  "wordcount":  1459 ,
+  "wordcount":  1463 ,
   "url": "https:\/\/johanfagerstroem.github.io\/2021\/https-client-certificates-with-yubikeys\/",
   "datePublished": "2021-09-21T10:49:47\u002b00:00",
   "dateModified": "2021-09-21T10:49:47\u002b00:00",
@@ -172,7 +172,7 @@ I wasn&rsquo;t able to find a similar quickstart tutorial on the internet, there
 
           <h1 id="introduction">Introduction</h1>
 <h2 id="tldr">tl;dr</h2>
-<p>This post covers setting up <a href="https://caddyserver.com/">Caddy</a> as reverse proxy,
+<p>This post covers setting up <a href="https://caddyserver.com/">Caddy</a> as a reverse proxy,
 and configure it to perform client certificate validation (a.k.a. mTLS). In
 addition to this, the post covers storing the client certificate and the
 private key securely on a Yubikey (acting as a virtual PIV
@@ -195,16 +195,16 @@ that letting your users store the client certificate and its private key
 directly on their devices may be insecure for a number of reasons. You want to
 enforce- and govern protection of the user&rsquo;s private key. You&rsquo;ve heard that
 smartcards can help out here, by acting as a hardware token that electronically
-is designed in a way that enabled RSA operations inside of the hardware, but
-does not allow for the private key to be read from the card once it has been
-loaded onto it.</p>
+is designed in a way that enables RSA operations inside of the hardware, but
+does not allow for the private key to be read out or extracted from the card
+once it has been loaded onto it.</p>
 <p>You quickly realize that smartcards, although functional, come with one major
 problem: not all laptops have readers, and you don&rsquo;t want to roll out external
 ones. <strong>Enter YubiKeys!</strong></p>
 <p>Yubico&rsquo;s YubiKeys offer the functionality of a virtual PIV smartcard, which is
 what we will use in this tutorial to safely store and protect the client
-certificate and it&rsquo;s belonging private key.</p>
-<p>In addition to setup and configure the YubiKey, we&rsquo;ll also cover to setup a
+certificate and its belonging private key.</p>
+<p>In addition to setup and configure the YubiKey, we&rsquo;ll also cover setting up a
 webserver that performs the client certificate validation as part of the TLS
 handshake, and configure Firefox to present a client certificate from a YubiKey
 when accessing the webserver.</p>
@@ -376,7 +376,7 @@ which will never and can not ever leave that YubiKey!</p>
            
             <p class="copyright-item">
                     <span>Words:</span>
-                   <span>1459</span>
+                   <span>1463</span>
             </p>
             
             <p class="copyright-item">
