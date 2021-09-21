@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  
+  
+  
+  
+  
+  <link rel="prev" href="https://johanfagerstroem.github.io/2019/first-post/" />
+  
+  <link rel="canonical" href="https://johanfagerstroem.github.io/2021/https-client-certificates-with-yubikeys/" />
+  <link rel='shortcut icon' type='image/x-icon' href='/favicon.ico' />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           HTTPS client certificates using Yubikeys | Johan Fagerström | Tech and Recreation
+       
+  </title>
+  <meta name="title" content="HTTPS client certificates using Yubikeys | Johan Fagerström | Tech and Recreation">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="HTTPS client certificates using Yubikeys"/>
+<meta name="twitter:description" content="Introduction tl;dr This post covers setting up Caddy as reverse proxy, and configure it to perform client certificate validation (a.k.a. mTLS). In addition to this, the post covers storing the client certificate and the private key securely on a Yubikey (acting as a virtual PIV smart card).
+I wasn&rsquo;t able to find a similar quickstart tutorial on the internet, therefore I&rsquo;m writing this one. I have absolutely zero affiliation with Yubico or Caddy; I just enjoy mucking about with their products and tools as they are really one step closer to ItJustWorks(TM) than several other solutions."/>
+
+  <script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "BlogPosting",
+  "headline": "HTTPS client certificates using Yubikeys",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https:\/\/johanfagerstroem.github.io\/2021\/https-client-certificates-with-yubikeys\/"
+  },
+  "image": {
+    "@type": "ImageObject",
+    "url": "https:\/\/johanfagerstroem.github.io\/cover.png",
+    "width":  800 ,
+    "height":  600 
+  },
+  "genre": "posts",
+  
+  "wordcount":  1459 ,
+  "url": "https:\/\/johanfagerstroem.github.io\/2021\/https-client-certificates-with-yubikeys\/",
+  "datePublished": "2021-09-21T10:49:47\u002b00:00",
+  "dateModified": "2021-09-21T10:49:47\u002b00:00",
+  "license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.",
+  "publisher": {
+    "@type": "Organization",
+    "name": "Johan Fagerström",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https:\/\/johanfagerstroem.github.io\/logo.png",
+      "width":  127 ,
+      "height":  40 
+    }
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Johan"
+  },
+  "description": ""
+}
+</script>
+</head>
+
+  
+
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="https://johanfagerstroem.github.io">Johan Fagerström | Tech and Recreation</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/" title="">Home</a>
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/aboutme" title="">About me</a>
+                
+                <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-sun"></i></a>&nbsp;
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-sun"></i></a>&nbsp;<a href="https://johanfagerstroem.github.io">Johan Fagerström | Tech and Recreation</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/" title="">Home</a>
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/aboutme" title="">About me</a>
+                
+        </div>
+    </div>
+</nav>
+
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp">
+    <header class="post-header">
+        <h1 class="post-title">HTTPS client certificates using Yubikeys</h1>
+        <div class="post-meta">
+            Written by <a href="https://johanfagerstroem.github.io" rel="author">Johan</a> with ♥ 
+                <span class="post-time">
+                    on <time datetime=2021-09-21 >21 September 2021</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="https://johanfagerstroem.github.io/categories/devops/"> DevOps </a>
+                        <a href="https://johanfagerstroem.github.io/categories/security/"> Security </a>
+                        
+                </span>
+                <i class="iconfont icon-timer"></i>
+                7 min
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+            
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <h1 id="introduction">Introduction</h1>
+<h2 id="tldr">tl;dr</h2>
+<p>This post covers setting up <a href="https://caddyserver.com/">Caddy</a> as reverse proxy,
+and configure it to perform client certificate validation (a.k.a. mTLS). In
+addition to this, the post covers storing the client certificate and the
+private key securely on a Yubikey (acting as a virtual PIV
+<a href="https://www.yubico.com/authentication-standards/smart-card/">smart card</a>).</p>
+<p>I wasn&rsquo;t able to find a similar quickstart tutorial on the internet, therefore
+I&rsquo;m writing this one. I have absolutely <em>zero</em> affiliation with Yubico or Caddy;
+I just enjoy mucking about with their products and tools as they are really one
+step closer to ItJustWorks(TM) than several other solutions.</p>
+<h2 id="background">Background</h2>
+<p>You have a self-hosted web service that you want to expose to the Internet -
+not because you want it to be public, but because you want to reach it from
+everywhere. You&rsquo;ve considered various tunnel solutions including VPNs, but
+refrain from using them due to operational complexity and inevitable IP
+addressing conflicts.</p>
+<p>You&rsquo;ve heard of the possibility to use client certificates in the browser,
+acting as an authentication mechanism operating on the TLS layer. By doing so,
+you get a similar tunnel as you would have with several TLS based VPN solutions.</p>
+<p>You decide to go for it, but when threat modeling the setup, you quickly realize
+that letting your users store the client certificate and its private key
+directly on their devices may be insecure for a number of reasons. You want to
+enforce- and govern protection of the user&rsquo;s private key. You&rsquo;ve heard that
+smartcards can help out here, by acting as a hardware token that electronically
+is designed in a way that enabled RSA operations inside of the hardware, but
+does not allow for the private key to be read from the card once it has been
+loaded onto it.</p>
+<p>You quickly realize that smartcards, although functional, come with one major
+problem: not all laptops have readers, and you don&rsquo;t want to roll out external
+ones. <strong>Enter YubiKeys!</strong></p>
+<p>Yubico&rsquo;s YubiKeys offer the functionality of a virtual PIV smartcard, which is
+what we will use in this tutorial to safely store and protect the client
+certificate and it&rsquo;s belonging private key.</p>
+<p>In addition to setup and configure the YubiKey, we&rsquo;ll also cover to setup a
+webserver that performs the client certificate validation as part of the TLS
+handshake, and configure Firefox to present a client certificate from a YubiKey
+when accessing the webserver.</p>
+<h2 id="outline">Outline</h2>
+<ul>
+<li>Setup a PKI using Easy-RSA</li>
+<li>Setup Caddy as a reverse proxy that performs client certificate validation</li>
+<li>Generate a client certificate and store it in the Yubikey</li>
+<li>Setup Firefox to use the Yubikey through PKCS11</li>
+</ul>
+<h2 id="disclaimer">Disclaimer</h2>
+<p>Do not hold me accountable for any misunderstandings or misconfigurations. If
+you have a data breach after having followed this post - it&rsquo;s on you, not me.</p>
+<p>Also, I have no affiliation with Yubico, Let&rsquo;s Encrypt, Caddy, Firefox or any
+other tech mentioned in this post.</p>
+<p>Finally, please excuse any misspellings or just overall bad English.</p>
+<h1 id="tutorial">Tutorial</h1>
+<p>Note: All steps in the tutorial are written for Ubuntu unless stated differently.</p>
+<h2 id="setting-up-the-pki">Setting up the PKI</h2>
+<p>First of all, we need to set up a CA that will issue the client certificates. In
+this tutorial, we will use Easy-RSA to simplify this step. Easy-RSA is a
+well-established and maintained shell script around the OpenSSL CLI, provided by
+the OpenVPN project (<a href="https://github.com/OpenVPN/easy-rsa)">https://github.com/OpenVPN/easy-rsa)</a>.</p>
+<p>You can download and install Easy-RSA directly from Github Releases into your CA
+directory, or you can use the Ubuntu provided package:</p>
+<pre><code>$&gt; sudo apt-get install easy-rsa
+</code></pre>
+<p>The Ubuntu package also provides a script to symlink in Easy-RSA to your
+Easy-RSA directory:</p>
+<pre><code>$&gt; make-cadir my-mtls-pki
+$&gt; cd my-mtls-pki
+</code></pre>
+<p>Now that you have an Easy-RSA directory, it&rsquo;s time to set up the CA by
+initializing the folder structure, and then build a CA (including generating
+the private key and the self-signed CA certificate). Easy-RSA will prompt you
+for a number of attributes for the CA, as well as a password to encrypt your
+CA&rsquo;s private key.</p>
+<pre><code>$&gt; ./easyrsa init-pki
+$&gt; ./easyrsa build-ca
+</code></pre>
+<p>Note: Do not lose control of this directory as it holds the private key of the
+CA, which is the root of trust in your PKI.</p>
+<h2 id="setting-up-caddy">Setting up Caddy</h2>
+<p>Spin up a VPS somewhere and SSH to it. Make sure it has port 80 and port 443
+accessible from the Internet (80 needed for ACME challenge), and point a DNS
+A record to it.</p>
+<p>In this tutorial we will be using Caddy for one reason: <em>simplicity</em>. Caddy
+can automatically retrieve certificates from Let&rsquo;s Encrypt (no need for a
+separate certbot or similar), it has support for <em>basic</em> client certificate
+validation and is very easy to configure, which makes it perfect for a
+tutorial. For a production scenario, you might want to consider another
+webserver with support for OCSP or CRLs, in the event that you want to revoke
+a client certificate.</p>
+<p>Install Caddy by downloading a DPKG package from Github Releases:</p>
+<pre><code>$&gt; wget https://github.com/caddyserver/caddy/releases/download/v2.4.3/caddy_2.4.3_linux_amd64.deb
+$&gt; sudo dpkg -i caddy_2.4.3_linux_amd64.deb
+</code></pre>
+<p>Install your recently generated CA <em>certificate</em> to the server by copying the
+contents of <code>my-mtls-pki/pki/ca.crt</code> to <code>/etc/caddy/ca.crt</code></p>
+<p>Edit the Caddy configuration to both retrieve a Let&rsquo;s Encrypt server certificate
+and to require- and verify client certificates from the browser against your CA
+certificate:</p>
+<pre><code>mtls.mydomain.com { # &lt;--- FQDN that Caddy should retrieve a certificate for
+    reverse_proxy localhost:8080 # &lt;--- Where to proxy incoming requests
+    tls {
+        client_auth {
+            mode require_and_verify # &lt;--- Require browser to present certificate
+            trusted_ca_cert_file /etc/caddy/ca.crt # &lt;--- Validate against our CA
+        }
+    }
+}
+</code></pre>
+<p>Restart Caddy, and verify that it&rsquo;s running:</p>
+<pre><code>$&gt; sudo systemctl restart caddy
+$&gt; sudo systemctl status caddy
+</code></pre>
+<p>Install a web service of your choice, listening on <strong>localhost:8080</strong>. I will
+use nginx&rsquo;s sample docker container:</p>
+<pre><code>$&gt; docker run -P -d nginxdemos/hello
+</code></pre>
+<h2 id="issuing-a-client-certificate">Issuing a client certificate</h2>
+<p>Connect your Yubikey. Verify that your computer recognizes it and can
+communicate with it by calling <code>ykman info</code>. Specifically, you should verify
+that the CCID USB interface is enabled, and that the PIV application is Enabled.</p>
+<pre><code>$&gt; ykman info
+Device type: YubiKey 5C
+Serial number: 666666
+Firmware version: 5.2.7
+Form factor: Keychain (USB-C)
+Enabled USB interfaces: CCID
+
+Applications
+OTP     	Disabled
+FIDO U2F	Disabled
+OpenPGP 	Enabled
+PIV     	Enabled
+OATH    	Enabled
+FIDO2   	Disabled
+</code></pre>
+<p>Generate a private RSA key <strong>on</strong> the YubiKey, and generate a CSR from it by
+following the steps below. By generating the RSA key on the actual YubiKey and
+not importing it, you make sure that the private key don&rsquo;t get lost.</p>
+<pre><code>$&gt; ykman piv generate-key 9a /tmp/alice.pub
+$&gt; ykman piv generate-csr -s alice 9a /tmp/alice.pub /tmp/alice.csr
+</code></pre>
+<p>You will be prompted for a management key. The management key protects various
+management operations on the virtual smartcard of the YubiKey. You will also be
+prompted for a PIN which will be used to protect the virtual smartcard. Both the
+MGM and the PIN key have default values, and you can for now just hit enter to
+use the defaults. In a production scenario, you most likely want to change
+those!</p>
+<p>In the commands above, <strong>9a</strong> refers to a <em>slot</em> on the virtual smartcard. 9a
+in the PIV standard is used for authentication. See
+<a href="https://developers.yubico.com/PIV/Introduction/">https://developers.yubico.com/PIV/Introduction/</a> for more information on the
+Yubikey&rsquo;s PIV application and the different keys.</p>
+<p>Now, use your previously setup Easy-RSA PKI to issue a client certificate for
+the recently generated CSR.</p>
+<pre><code>$&gt; cd my-mtls-pki
+$&gt; ./easyrsa import-req /tmp/alice.csr alice
+$&gt; ./easyrsa siqn-req client alice
+</code></pre>
+<p>You will be promted for the CA private key password that you entered when the
+PKI and the CA was set up. The certificate will be available under the
+<code>pki/issued/</code> directory with name <code>alice.crt</code>.</p>
+<p>Finally, import the recently issued certificate back onto the YubiKey.</p>
+<pre><code>$&gt; ykman piv import-certificate 9a my-mtls-pki/pki/issued/alice.crt
+</code></pre>
+<p>Like before, you&rsquo;ll be prompted for the management key.</p>
+<h2 id="configure-firefox-to-use-yubikey-certificate">Configure Firefox to use YubiKey certificate</h2>
+<p>Connect your Yubikey. Install the official YubiKey PKCS11 module:</p>
+<pre><code>$&gt; sudo apt-get install ykcs11
+</code></pre>
+<p>Configure Firefox to use the PKCS11 module by:</p>
+<ol>
+<li>Go into <strong>Settings</strong> → <strong>Privacy &amp; Security</strong> → <strong>Certificates</strong> →
+<strong>Security Devices</strong>.</li>
+<li>Click <strong>Load</strong>.</li>
+<li>Enter a name (e.g. YKCS11) and browse for the module filename to
+<code>/usr/lib/x86_64-linux-gnu/libykcs11.so</code>.</li>
+<li>Restart Firefox for the changes to take effect properly.</li>
+<li>Repeat step 1 - you should now see the YubiKey as a hardware device.</li>
+<li>Go into <strong>Settings</strong> → <strong>Privacy &amp; Security</strong> → <strong>Certificates</strong> →
+<strong>View Certificates</strong>. You&rsquo;ll be prompted for your PIN. After having
+entered it, you should see your client certificate under
+<strong>Your Certificates</strong>.</li>
+</ol>
+<p>Now, open a tab in Firefox, and hit the Caddy server you set up earlier. You&rsquo;ll
+be prompted for your PIN again, see below:</p>
+<p><img src="/images/ff-pin-prompt.png" alt="PIN prompt" title="PIN prompt"></p>
+<p>After having entered your PIN and hit enter, your YubiKey performs the client
+part of the TLS handshake, using the private key that was generated on it, and
+which will never and can not ever leave that YubiKey!</p>
+<p>Enjoy your secure web service!</p>
+<h1 id="read-more">Read more</h1>
+<ul>
+<li>PIV standard on Wikipedia: <a href="https://en.wikipedia.org/wiki/FIPS_201">https://en.wikipedia.org/wiki/FIPS_201</a></li>
+<li><a href="https://csrc.nist.gov/projects/piv/piv-standards-and-supporting-documentation">https://csrc.nist.gov/projects/piv/piv-standards-and-supporting-documentation</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>Johan Fagerström </span>
+                </p>
+            
+           
+            <p class="copyright-item">
+                    <span>Words:</span>
+                   <span>1459</span>
+            </p>
+            
+            <p class="copyright-item">
+                
+                <span>Share:</span>
+                <span>
+
+      
+        <a href="//twitter.com/share?url=https%3a%2f%2fjohanfagerstroem.github.io%2f2021%2fhttps-client-certificates-with-yubikeys%2f&amp;text=HTTPS%20client%20certificates%20using%20Yubikeys&amp;via=" target="_blank" title="Share on Twitter">
+          <i class="iconfont icon-twitter"></i>
+        </a>
+        
+      
+      
+        <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fjohanfagerstroem.github.io%2f2021%2fhttps-client-certificates-with-yubikeys%2f" target="_blank" title="Share on Facebook">
+          <i class="iconfont icon-facebook"></i>
+        </a>
+        
+      
+      
+        <a href="//reddit.com/submit?url=https%3a%2f%2fjohanfagerstroem.github.io%2f2021%2fhttps-client-certificates-with-yubikeys%2f&amp;title=HTTPS%20client%20certificates%20using%20Yubikeys" target="_blank" title="Share on Reddit">
+          <i class="iconfont icon-reddit"></i>
+        </a>
+        
+      
+      
+        <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fjohanfagerstroem.github.io%2f2021%2fhttps-client-certificates-with-yubikeys%2f&amp;title=HTTPS%20client%20certificates%20using%20Yubikeys" target="_blank" title="Share on LinkedIn">
+          <i class="iconfont icon-linkedin"></i>
+        </a>
+        
+      
+      
+        
+      
+        <a href="//news.ycombinator.com/submitlink?u=https%3a%2f%2fjohanfagerstroem.github.io%2f2021%2fhttps-client-certificates-with-yubikeys%2f&amp;description=HTTPS%20client%20certificates%20using%20Yubikeys" target="_blank" title="Share on Hacker News">
+          <i class="iconfont icon-ycombinator"></i>
+        </a>
+        
+        
+      
+
+          
+
+          
+
+          
+
+          
+</span>
+                
+            </p>
+
+             
+            <p class="copyright-item">
+                Released under <a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a>
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+        <section>
+                <a href="javascript:window.history.back();">Back</a></span> · 
+                <span><a href="https://johanfagerstroem.github.io">Home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="https://johanfagerstroem.github.io/2019/first-post/" class="prev" rel="prev" title="That first post"><i class="iconfont icon-dajiantou"></i>&nbsp;That first post</a>
+         
+        
+    </div>
+
+    <div class="post-comment">
+          
+          
+
+
+
+ 
+
+
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">1896 - 2021</span>
+        
+         
+            <span class="author" itemprop="copyrightHolder"><a href="https://johanfagerstroem.github.io">Johan Fagerström</a> | </span>
+         
+
+		  <span>Crafted with ❤️ by <a href="https://github.com/Fastbyte01/KeepIt" target="_blank" rel="external nofollow noopener noreffer">KeepIt</a> & <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreffer">Hugo</a></span>
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+     <link href="//lib.baomitu.com/lightgallery/1.6.12/css/lightgallery.min.css" rel="stylesheet">  
+      
+     <script src="/js/vendor_gallery.min.js" async="" ></script>
+    
+  
+
+
+
+
+
+
+
+     </div>
+  </body>
+</html>
