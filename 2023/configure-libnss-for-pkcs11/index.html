@@ -10,9 +10,9 @@
   
   
   
+  <link rel="prev" href="https://johanfagerstroem.github.io/2021/https-client-certificates-with-yubikeys/" />
   
-  <link rel="next" href="https://johanfagerstroem.github.io/2021/https-client-certificates-with-yubikeys/" />
-  <link rel="canonical" href="https://johanfagerstroem.github.io/2019/first-post/" />
+  <link rel="canonical" href="https://johanfagerstroem.github.io/2023/configure-libnss-for-pkcs11/" />
   <link rel='shortcut icon' type='image/x-icon' href='/favicon.ico' />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -24,10 +24,10 @@
   <title>
        
        
-           That first post | Johan Fagerström | Tech and Recreation
+           PKCS11 support in Microsoft Edge and Google Chrome | Johan Fagerström | Tech and Recreation
        
   </title>
-  <meta name="title" content="That first post | Johan Fagerström | Tech and Recreation">
+  <meta name="title" content="PKCS11 support in Microsoft Edge and Google Chrome | Johan Fagerström | Tech and Recreation">
     
   
   <link rel="stylesheet" href="/font/iconfont.css">
@@ -35,17 +35,18 @@
 
 
   <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="That first post"/>
-<meta name="twitter:description" content="So, I got the idea that I should start writing down whatever I do that may be of any help to others. Every now and then, I find myself in the situation of a technical problem that just doesn&rsquo;t seem to have a solution indexed in any search engine or community, and I&rsquo;ll have to solve it on my own. That is one example of what I will write about here."/>
+<meta name="twitter:title" content="PKCS11 support in Microsoft Edge and Google Chrome"/>
+<meta name="twitter:description" content="Introduction Following up on the post I wrote on using using virtual smartcards (in the shape of Yubikeys) in Firefox for secure hardware-backed client certificate authentication. There is now a way to configure Google Chrome and Microsoft Edge on Linux to support the same workflow.
+Both Google Chrome and Microsoft Edge are based on Chromium, which under the hood makes use of Mozilla NSS (libnss) for network communication. NSS does have support for PKCS11 modules, and can easily be configured with the official PKCS11 module from Yubico as described in the previous post."/>
 
   <script type="application/ld+json">
 {
   "@context": "http://schema.org",
   "@type": "BlogPosting",
-  "headline": "That first post",
+  "headline": "PKCS11 support in Microsoft Edge and Google Chrome",
   "mainEntityOfPage": {
     "@type": "WebPage",
-    "@id": "https:\/\/johanfagerstroem.github.io\/2019\/first-post\/"
+    "@id": "https:\/\/johanfagerstroem.github.io\/2023\/configure-libnss-for-pkcs11\/"
   },
   "image": {
     "@type": "ImageObject",
@@ -55,10 +56,10 @@
   },
   "genre": "posts",
   
-  "wordcount":  72 ,
-  "url": "https:\/\/johanfagerstroem.github.io\/2019\/first-post\/",
-  "datePublished": "2019-10-31T18:49:47\u002b00:00",
-  "dateModified": "2019-10-31T18:49:47\u002b00:00",
+  "wordcount":  234 ,
+  "url": "https:\/\/johanfagerstroem.github.io\/2023\/configure-libnss-for-pkcs11\/",
+  "datePublished": "2023-03-06T09:11:47\u002b00:00",
+  "dateModified": "2023-03-06T09:11:47\u002b00:00",
   "license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.",
   "publisher": {
     "@type": "Organization",
@@ -134,20 +135,21 @@
       		
 <article class="post-warp">
     <header class="post-header">
-        <h1 class="post-title">That first post</h1>
+        <h1 class="post-title">PKCS11 support in Microsoft Edge and Google Chrome</h1>
         <div class="post-meta">
             Written by <a href="https://johanfagerstroem.github.io" rel="author">Johan</a> with ♥ 
                 <span class="post-time">
-                    on <time datetime=2019-10-31 >31 October 2019</time>
+                    on <time datetime=2023-03-06 >6 March 2023</time>
                 </span>
                 in
                 <i class="iconfont icon-folder"></i>
                 <span class="post-category">
-                        <a href="https://johanfagerstroem.github.io/categories/random/"> Random </a>
+                        <a href="https://johanfagerstroem.github.io/categories/devops/"> DevOps </a>
+                        <a href="https://johanfagerstroem.github.io/categories/security/"> Security </a>
                         
                 </span>
                 <i class="iconfont icon-timer"></i>
-                1 min
+                2 min
         </div>
     </header>
     <div class="post-content">
@@ -166,12 +168,32 @@
           
           
 
-          <p>So, I got the idea that I should start writing down whatever I do that may be
-of any help to others. Every now and then, I find myself in the situation of a
-technical problem that just doesn&rsquo;t seem to have a solution indexed in any
-search engine or community, and I&rsquo;ll have to solve it on my own. That is one
-example of what I will write about here.</p>
-<p>Enjoy!</p>
+          <h2 id="introduction">Introduction</h2>
+<p>Following up on the post I wrote on using using virtual smartcards (in the
+shape of Yubikeys) in Firefox for secure hardware-backed client certificate
+authentication. There is now a way to configure Google Chrome and Microsoft
+Edge <em>on Linux</em> to support the same workflow.</p>
+<p>Both Google Chrome and Microsoft Edge are based on Chromium, which under the
+hood makes use of Mozilla NSS (libnss) for network communication. NSS does have
+support for PKCS11 modules, and can easily be configured with the official
+PKCS11 module from Yubico as described in the previous post. See section below
+for the configuration.</p>
+<p>While this is news to me, the support has been around for a while. Microsoft
+Edge on Windows has worked with smart cards out of the box on since I wrote the
+previous post. However, despite endless searching, I found no information on
+how to make this work on Chrome or Edge on Linux back in that day. Recently,
+out ouf pure coincidence, I ran into this again and found the configuration
+options of NSS, as described below.</p>
+<h2 id="configuration">Configuration</h2>
+<p>NSS can be configured to use PKCS11 modules by placing the following file at
+<code>~/.pki/nssdb/pkcs11.txt</code>:</p>
+<pre><code>library=/usr/lib/x86_64-linux-gnu/libykcs11.so
+name=Yubikey
+</code></pre>
+<p>Replace libykcs11.so with the PKCS11 module of your choice. If you&rsquo;re using
+Yubikey&rsquo;s PIV applet (as showcased in the previous blog post), I recommend
+using Yubico&rsquo;s official PKCS11 (which is called YKCS11 - installation described
+in the previous post).</p>
 
     </div>
 
@@ -185,7 +207,7 @@ example of what I will write about here.</p>
            
             <p class="copyright-item">
                     <span>Words:</span>
-                   <span>72</span>
+                   <span>234</span>
             </p>
             
             <p class="copyright-item">
@@ -194,25 +216,25 @@ example of what I will write about here.</p>
                 <span>
 
       
-        <a href="//twitter.com/share?url=https%3a%2f%2fjohanfagerstroem.github.io%2f2019%2ffirst-post%2f&amp;text=That%20first%20post&amp;via=" target="_blank" title="Share on Twitter">
+        <a href="//twitter.com/share?url=https%3a%2f%2fjohanfagerstroem.github.io%2f2023%2fconfigure-libnss-for-pkcs11%2f&amp;text=PKCS11%20support%20in%20Microsoft%20Edge%20and%20Google%20Chrome&amp;via=" target="_blank" title="Share on Twitter">
           <i class="iconfont icon-twitter"></i>
         </a>
         
       
       
-        <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fjohanfagerstroem.github.io%2f2019%2ffirst-post%2f" target="_blank" title="Share on Facebook">
+        <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fjohanfagerstroem.github.io%2f2023%2fconfigure-libnss-for-pkcs11%2f" target="_blank" title="Share on Facebook">
           <i class="iconfont icon-facebook"></i>
         </a>
         
       
       
-        <a href="//reddit.com/submit?url=https%3a%2f%2fjohanfagerstroem.github.io%2f2019%2ffirst-post%2f&amp;title=That%20first%20post" target="_blank" title="Share on Reddit">
+        <a href="//reddit.com/submit?url=https%3a%2f%2fjohanfagerstroem.github.io%2f2023%2fconfigure-libnss-for-pkcs11%2f&amp;title=PKCS11%20support%20in%20Microsoft%20Edge%20and%20Google%20Chrome" target="_blank" title="Share on Reddit">
           <i class="iconfont icon-reddit"></i>
         </a>
         
       
       
-        <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fjohanfagerstroem.github.io%2f2019%2ffirst-post%2f&amp;title=That%20first%20post" target="_blank" title="Share on LinkedIn">
+        <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fjohanfagerstroem.github.io%2f2023%2fconfigure-libnss-for-pkcs11%2f&amp;title=PKCS11%20support%20in%20Microsoft%20Edge%20and%20Google%20Chrome" target="_blank" title="Share on LinkedIn">
           <i class="iconfont icon-linkedin"></i>
         </a>
         
@@ -220,7 +242,7 @@ example of what I will write about here.</p>
       
         
       
-        <a href="//news.ycombinator.com/submitlink?u=https%3a%2f%2fjohanfagerstroem.github.io%2f2019%2ffirst-post%2f&amp;description=That%20first%20post" target="_blank" title="Share on Hacker News">
+        <a href="//news.ycombinator.com/submitlink?u=https%3a%2f%2fjohanfagerstroem.github.io%2f2023%2fconfigure-libnss-for-pkcs11%2f&amp;description=PKCS11%20support%20in%20Microsoft%20Edge%20and%20Google%20Chrome" target="_blank" title="Share on Hacker News">
           <i class="iconfont icon-ycombinator"></i>
         </a>
         
@@ -255,9 +277,9 @@ example of what I will write about here.</p>
     </div>
 
     <div class="post-nav">
-         
         
-        <a href="https://johanfagerstroem.github.io/2021/https-client-certificates-with-yubikeys/" class="next" rel="next" title="HTTPS client certificates using Yubikeys">HTTPS client certificates using Yubikeys&nbsp;<i class="iconfont icon-xiaojiantou"></i></a>
+        <a href="https://johanfagerstroem.github.io/2021/https-client-certificates-with-yubikeys/" class="prev" rel="prev" title="HTTPS client certificates using Yubikeys"><i class="iconfont icon-dajiantou"></i>&nbsp;HTTPS client certificates using Yubikeys</a>
+         
         
     </div>
 

@@ -7,7 +7,17 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Tue, 21 Sep 2021 10:49:47 +0000</lastBuildDate><atom:link href="https://johanfagerstroem.github.io/categories/devops/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 06 Mar 2023 09:11:47 +0000</lastBuildDate><atom:link href="https://johanfagerstroem.github.io/categories/devops/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>PKCS11 support in Microsoft Edge and Google Chrome</title>
+      <link>https://johanfagerstroem.github.io/2023/configure-libnss-for-pkcs11/</link>
+      <pubDate>Mon, 06 Mar 2023 09:11:47 +0000</pubDate>
+      
+      <guid>https://johanfagerstroem.github.io/2023/configure-libnss-for-pkcs11/</guid>
+      <description>Introduction Following up on the post I wrote on using using virtual smartcards (in the shape of Yubikeys) in Firefox for secure hardware-backed client certificate authentication. There is now a way to configure Google Chrome and Microsoft Edge on Linux to support the same workflow.
+Both Google Chrome and Microsoft Edge are based on Chromium, which under the hood makes use of Mozilla NSS (libnss) for network communication. NSS does have support for PKCS11 modules, and can easily be configured with the official PKCS11 module from Yubico as described in the previous post.</description>
+    </item>
+    
     <item>
       <title>HTTPS client certificates using Yubikeys</title>
       <link>https://johanfagerstroem.github.io/2021/https-client-certificates-with-yubikeys/</link>
